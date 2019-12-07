@@ -2393,7 +2393,8 @@ namespace StbImageSharp
 		{
 			do
 			{
-				z->code_buffer |= (uint)((uint)(stbi__zget8(z)) << z->num_bits);
+                if ((z->zbuffer) < (z->zbuffer_end))
+                    z->code_buffer |= (uint)((uint)(*z->zbuffer++) << z->num_bits);
 				z->num_bits += (int)(8);
 			}
 			while (z->num_bits <= 24);
@@ -2851,15 +2852,20 @@ namespace StbImageSharp
 
 		public static int stbi__paeth(int a, int b, int c)
 		{
-			int p = (int)(a + b - c);
-			int pa = (int)(CRuntime.abs((int)(p - a)));
-			int pb = (int)(CRuntime.abs((int)(p - b)));
-			int pc = (int)(CRuntime.abs((int)(p - c)));
-			if ((pa <= pb) && (pa <= pc))
-				return (int)(a);
-			if (pb <= pc)
-				return (int)(b);
-			return (int)(c);
+            unchecked {
+                int p = (int)(a + b - c);
+                int pa = p - a;
+                if (pa < 0) pa = -pa;
+                int pb = p - b;
+                if (pb < 0) pb = -pb;
+                int pc = p - c;
+                if (pc < 0) pc = -pc;
+                if ((pa <= pb) && (pa <= pc))
+                    return (int)(a);
+                if (pb <= pc)
+                    return (int)(b);
+                return (int)(c);
+            }
 		}
 
 		public static int stbi__create_png_image_raw(stbi__png a, byte* raw, uint raw_len, int out_n, uint x, uint y, int depth, int color)

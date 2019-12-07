@@ -19,19 +19,26 @@ namespace StbImageSharp
 			return ptr.ToPointer();
 		}
 
-		public static void memcpy(void* a, void* b, long size)
+        public static void memcpy(void* a, void* b, long size)
 		{
-			var ap = (byte*) a;
-			var bp = (byte*) b;
-			for (long i = 0; i < size; ++i)
-			{
-				*ap++ = *bp++;
-			}
+            unchecked {
+                var ap = (byte*)a;
+                var bp = (byte*)b;
+                for (long i = 0; i < size; ++i) {
+                    *ap++ = *bp++;
+                }
+            }
 		}
 
 		public static void memcpy(void* a, void* b, ulong size)
 		{
-			memcpy(a, b, (long) size);
+            unchecked {
+                var ap = (byte*)a;
+                var bp = (byte*)b;
+                for (ulong i = 0; i < size; ++i) {
+                    *ap++ = *bp++;
+                }
+            }
 		}
 
 		public static void memmove(void* a, void* b, long size)
