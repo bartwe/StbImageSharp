@@ -38,7 +38,7 @@ namespace StbImageSharp
 			return image;
 		}
 
-		public unsafe static ImageResult FromMemory(byte[] bytes, ColorComponents requiredComponents = ColorComponents.Default)
+		public unsafe static ImageResult FromMemory(byte[] bytes, int length, ColorComponents requiredComponents = ColorComponents.Default)
 		{
 			byte* result = null;
 
@@ -47,7 +47,7 @@ namespace StbImageSharp
 				int x, y, comp;
 				fixed (byte* b = bytes)
 				{
-					result = StbImage.stbi_load_from_memory(b, bytes.Length, &x, &y, &comp, (int)requiredComponents);
+					result = StbImage.stbi_load_from_memory(b, length, &x, &y, &comp, (int)requiredComponents);
 				}
 
 				return FromResult(result, x, y, (ColorComponents)comp, requiredComponents);
